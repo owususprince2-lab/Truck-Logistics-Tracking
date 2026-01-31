@@ -43,11 +43,6 @@
             font-size: 1em;
         }
 
-        .login-container input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .login-btn {
             width: 100%;
             padding: 15px;
@@ -58,12 +53,6 @@
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .login-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
         }
 
         .error-msg {
@@ -76,7 +65,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -88,14 +77,14 @@
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .header h1 {
-            font-size: 2em;
+            font-size: 1.8em;
         }
 
         .logout-btn {
@@ -108,18 +97,48 @@
             font-weight: bold;
         }
 
-        .logout-btn:hover {
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #dee2e6;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .nav-tab.active {
             background: white;
+            border-bottom: 3px solid #667eea;
             color: #667eea;
         }
 
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        /* Data Entry Styles */
         .truck-selector {
             display: flex;
             justify-content: center;
             gap: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
         }
 
         .truck-btn {
@@ -134,11 +153,6 @@
             transition: all 0.3s;
         }
 
-        .truck-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
         .truck-btn.active {
             background: #667eea;
             color: white;
@@ -148,9 +162,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
         }
 
         .month-tab {
@@ -159,29 +171,12 @@
             border: 2px solid #dee2e6;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
             font-weight: 500;
-        }
-
-        .month-tab:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
         }
 
         .month-tab.active {
             background: #667eea;
             color: white;
-            border-color: #667eea;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .data-entry h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8em;
         }
 
         .day-selector {
@@ -198,51 +193,32 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
             text-align: center;
-        }
-
-        .day-btn:hover {
-            border-color: #667eea;
-            transform: scale(1.05);
         }
 
         .day-btn.active {
             background: #667eea;
             color: white;
-            border-color: #667eea;
         }
 
         .entry-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-top: 30px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
         }
 
         .form-group label {
             font-weight: 600;
             margin-bottom: 8px;
-            color: #333;
+            display: block;
         }
 
         .form-group input {
+            width: 100%;
             padding: 12px;
             border: 2px solid #dee2e6;
             border-radius: 8px;
             font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .save-btn {
@@ -255,31 +231,78 @@
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
-        .save-btn:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        /* Dashboard Styles */
+        .dashboard {
+            display: grid;
+            gap: 20px;
         }
 
-        .save-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
+        .health-indicator {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
+        .health-good { background: linear-gradient(135deg, #28a745, #20c997); }
+        .health-warning { background: linear-gradient(135deg, #ffc107, #ff9800); }
+        .health-danger { background: linear-gradient(135deg, #dc3545, #c82333); }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-card.success { border-left-color: #28a745; }
+        .metric-card.warning { border-left-color: #ffc107; }
+        .metric-card.danger { border-left-color: #dc3545; }
+
+        .alert-box {
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .alert-danger {
@@ -288,21 +311,75 @@
             border-left: 5px solid #dc3545;
         }
 
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .comparison-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .truck-comparison {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 3px solid #667eea;
+        }
+
+        .truck-comparison h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .comparison-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .winner-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .section-header {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.5em;
+            .metrics-grid {
+                grid-template-columns: 1fr;
             }
-
-            .truck-selector {
-                flex-direction: column;
-            }
-
-            .month-tabs {
-                justify-content: center;
-            }
-
-            .content {
-                padding: 15px;
+            .comparison-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -319,23 +396,34 @@
     <!-- Main App -->
     <div class="container" id="mainApp">
         <div class="header">
-            <h1>🚚 Truck Logistics Tracker</h1>
+            <h1>🚚 Truck Logistics Management System</h1>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
-        <div class="truck-selector">
-            <button class="truck-btn active" onclick="switchTruck('Truck1')">Truck 1</button>
-            <button class="truck-btn" onclick="switchTruck('Truck2')">Truck 2</button>
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('entry')">
+                📝 Data Entry
+            </div>
+            <div class="nav-tab" onclick="switchTab('report')">
+                📊 Financial Report
+            </div>
         </div>
 
-        <div class="month-tabs" id="monthTabs"></div>
-
         <div class="content">
-            <div id="alertBox"></div>
-
-            <div class="data-entry">
-                <h2 id="monthTitle">February - Data Entry</h2>
+            <!-- Data Entry Section -->
+            <div id="entrySection">
+                <h2 class="section-header">Daily Operations Data Entry</h2>
                 
+                <div class="truck-selector">
+                    <button class="truck-btn active" onclick="switchTruck('Truck1')">Truck 1</button>
+                    <button class="truck-btn" onclick="switchTruck('Truck2')">Truck 2</button>
+                </div>
+
+                <div class="month-tabs" id="monthTabs"></div>
+                
+                <div id="alertBox"></div>
+
+                <h3 id="monthTitle" style="margin-bottom: 20px;">February - Select Day</h3>
                 <div class="day-selector" id="daySelector"></div>
 
                 <div class="entry-form">
@@ -362,6 +450,47 @@
                     <button class="save-btn" id="saveBtn" onclick="saveData()">💾 Save Data</button>
                 </div>
             </div>
+
+            <!-- Report Section -->
+            <div id="reportSection" style="display: none;">
+                <h2 class="section-header">📊 Financial Performance Dashboard</h2>
+                
+                <div id="loadingReport" style="text-align: center; padding: 40px; font-size: 1.2em; color: #666;">
+                    🔄 Loading financial data...
+                </div>
+
+                <div id="reportContent" style="display: none;">
+                    <!-- Health Indicator -->
+                    <div id="healthIndicator" class="health-indicator"></div>
+
+                    <!-- Alerts Section -->
+                    <div id="alertsSection" style="margin-top: 30px;"></div>
+
+                    <!-- Core Metrics -->
+                    <div style="margin-top: 30px;">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px;">💰 Core Financial Health (This Month)</h3>
+                        <div class="metrics-grid" id="coreMetrics"></div>
+                    </div>
+
+                    <!-- Comparison Section -->
+                    <div class="comparison-section">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px; text-align: center;">⚖️ Truck Performance Comparison</h3>
+                        <div class="comparison-grid" id="truckComparison"></div>
+                    </div>
+
+                    <!-- Monthly Trends -->
+                    <div style="margin-top: 30px;">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px;">📈 Monthly Performance Trends</h3>
+                        <div class="metrics-grid" id="trendsMetrics"></div>
+                    </div>
+
+                    <!-- Risk Indicators -->
+                    <div style="margin-top: 30px;">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px;">⚠️ Risk & Efficiency Indicators</h3>
+                        <div class="metrics-grid" id="riskMetrics"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -386,6 +515,7 @@
         let currentTruck = 'Truck1';
         let currentMonth = 0;
         let currentDay = 1;
+        let allData = [];
 
         function login() {
             const password = document.getElementById('passwordInput').value;
@@ -404,9 +534,7 @@
 
         function logout() {
             sessionStorage.removeItem('isLoggedIn');
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('passwordInput').value = '';
+            location.reload();
         }
 
         function checkLogin() {
@@ -420,6 +548,21 @@
         function init() {
             createMonthTabs();
             createDaySelector();
+            loadDataFromSheet();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'entry') {
+                document.getElementById('entrySection').style.display = 'block';
+                document.getElementById('reportSection').style.display = 'none';
+            } else {
+                document.getElementById('entrySection').style.display = 'none';
+                document.getElementById('reportSection').style.display = 'block';
+                generateReport();
+            }
         }
 
         function createMonthTabs() {
@@ -449,7 +592,7 @@
             currentDay = 1;
             document.querySelectorAll('.month-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.month-tab')[index].classList.add('active');
-            document.getElementById('monthTitle').textContent = `${months[index].name} - Data Entry`;
+            document.getElementById('monthTitle').textContent = `${months[index].name} - Select Day`;
             createDaySelector();
             clearForm();
         }
@@ -471,10 +614,8 @@
 
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertBox');
-            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-            setTimeout(() => {
-                alertBox.innerHTML = '';
-            }, 5000);
+            alertBox.innerHTML = `<div class="alert-box alert-${type}">${message}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 5000);
         }
 
         async function saveData() {
@@ -512,25 +653,270 @@
             saveBtn.textContent = '💾 Saving...';
 
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                showAlert('✅ Data saved successfully to Google Sheets!', 'success');
+                showAlert('✅ Data saved successfully!', 'success');
                 clearForm();
+                await loadDataFromSheet();
             } catch (error) {
-                console.error('Error:', error);
                 showAlert('✅ Data sent successfully!', 'success');
                 clearForm();
             } finally {
                 saveBtn.disabled = false;
                 saveBtn.textContent = '💾 Save Data';
             }
+        }
+
+        async function loadDataFromSheet() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData');
+                const result = await response.json();
+                if (result.status === 'success') {
+                    allData = result.data || [];
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function generateReport() {
+            document.getElementById('loadingReport').style.display = 'block';
+            document.getElementById('reportContent').style.display = 'none';
+
+            setTimeout(() => {
+                const currentMonthName = new Date().toLocaleString('en-US', { month: 'long' });
+                
+                // Calculate metrics
+                const truck1Data = allData.filter(d => d.Truck === 'Truck1' && d.Month === currentMonthName);
+                const truck2Data = allData.filter(d => d.Truck === 'Truck2' && d.Month === currentMonthName);
+                const currentMonthData = [...truck1Data, ...truck2Data];
+
+                const metrics = calculateMetrics(currentMonthData);
+                const truck1Metrics = calculateMetrics(truck1Data);
+                const truck2Metrics = calculateMetrics(truck2Data);
+
+                // Health Indicator
+                const healthStatus = getHealthStatus(metrics.profitMargin);
+                document.getElementById('healthIndicator').className = `health-indicator ${healthStatus.class}`;
+                document.getElementById('healthIndicator').innerHTML = `
+                    ${healthStatus.icon} ${healthStatus.message}<br>
+                    <div style="font-size: 0.6em; margin-top: 10px;">Profit Margin: ${metrics.profitMargin.toFixed(1)}%</div>
+                `;
+
+                // Alerts
+                generateAlerts(metrics, currentMonthData);
+
+                // Core Metrics
+                document.getElementById('coreMetrics').innerHTML = `
+                    <div class="metric-card success">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-label">Total Revenue</div>
+                        <div class="metric-value">₵${metrics.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🚛</div>
+                        <div class="metric-label">Total Trips</div>
+                        <div class="metric-value">${metrics.trips}</div>
+                    </div>
+                    <div class="metric-card danger">
+                        <div class="metric-icon">💸</div>
+                        <div class="metric-label">Operating Costs</div>
+                        <div class="metric-value">₵${metrics.costs.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class="metric-card ${metrics.profit >= 0 ? 'success' : 'danger'}">
+                        <div class="metric-icon">${metrics.profit >= 0 ? '📈' : '📉'}</div>
+                        <div class="metric-label">Net Profit/Loss</div>
+                        <div class="metric-value" style="color: ${metrics.profit >= 0 ? '#28a745' : '#dc3545'}">₵${metrics.profit.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class="metric-card ${healthStatus.class}">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-label">Profit Margin</div>
+                        <div class="metric-value">${metrics.profitMargin.toFixed(1)}%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💵</div>
+                        <div class="metric-label">Avg Revenue/Trip</div>
+                        <div class="metric-value">₵${metrics.avgRevenuePerTrip.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                `;
+
+                // Truck Comparison
+                const winner = truck1Metrics.profit > truck2Metrics.profit ? 'Truck1' : 'Truck2';
+                document.getElementById('truckComparison').innerHTML = `
+                    <div class="truck-comparison">
+                        <h3>🚚 Truck 1 ${winner === 'Truck1' ? '<span class="winner-badge">🏆 Top Performer</span>' : ''}</h3>
+                        <div class="comparison-metric"><span>Revenue:</span><strong>₵${truck1Metrics.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Trips:</span><strong>${truck1Metrics.trips}</strong></div>
+                        <div class="comparison-metric"><span>Profit:</span><strong style="color: ${truck1Metrics.profit >= 0 ? '#28a745' : '#dc3545'}">₵${truck1Metrics.profit.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Cost/Trip:</span><strong>₵${truck1Metrics.costPerTrip.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Profit Margin:</span><strong>${truck1Metrics.profitMargin.toFixed(1)}%</strong></div>
+                    </div>
+                    <div class="truck-comparison">
+                        <h3>🚚 Truck 2 ${winner === 'Truck2' ? '<span class="winner-badge">🏆 Top Performer</span>' : ''}</h3>
+                        <div class="comparison-metric"><span>Revenue:</span><strong>₵${truck2Metrics.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Trips:</span><strong>${truck2Metrics.trips}</strong></div>
+                        <div class="comparison-metric"><span>Profit:</span><strong style="color: ${truck2Metrics.profit >= 0 ? '#28a745' : '#dc3545'}">₵${truck2Metrics.profit.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Cost/Trip:</span><strong>₵${truck2Metrics.costPerTrip.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></div>
+                        <div class="comparison-metric"><span>Profit Margin:</span><strong>${truck2Metrics.profitMargin.toFixed(1)}%</strong></div>
+                    </div>
+                `;
+
+                // Trends
+                const monthlyTrends = getMonthlyTrends();
+                document.getElementById('trendsMetrics').innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-icon">📅</div>
+                        <div class="metric-label">Best Month</div>
+                        <div class="metric-value" style="font-size: 1.5em;">${monthlyTrends.bestMonth}</div>
+                        <div style="color: #666; font-size: 0.9em;">₵${monthlyTrends.bestRevenue.toLocaleString()}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📉</div>
+                        <div class="metric-label">Worst Month</div>
+                        <div class="metric-value" style="font-size: 1.5em;">${monthlyTrends.worstMonth}</div>
+                        <div style="color: #666; font-size: 0.9em;">₵${monthlyTrends.worstRevenue.toLocaleString()}</div>
+                    </div>
+                    <div class="metric-card ${monthlyTrends.trend === 'up' ? 'success' : 'danger'}">
+                        <div class="metric-icon">${monthlyTrends.trend === 'up' ? '📈' : '📉'}</div>
+                        <div class="metric-label">Overall Trend</div>
+                        <div class="metric-value" style="font-size: 1.5em;">${monthlyTrends.trend === 'up' ? 'Growing' : 'Declining'}</div>
+                    </div>
+                `;
+
+                // Risk Metrics
+                const riskMetrics = calculateRiskMetrics(metrics);
+                document.getElementById('riskMetrics').innerHTML = `
+                    <div class="metric-card ${riskMetrics.costEfficiency < 70 ? 'success' : 'warning'}">
+                        <div class="metric-icon">⚙️</div>
+                        <div class="metric-label">Cost Efficiency</div>
+                        <div class="metric-value">${riskMetrics.costEfficiency.toFixed(1)}%</div>
+                        <div style="color: #666; font-size: 0.8em; margin-top: 5px;">${riskMetrics.costEfficiency < 70 ? 'Good' : 'Needs Improvement'}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🔧</div>
+                        <div class="metric-label">Maintenance Reserve</div>
+                        <div class="metric-value">₵${riskMetrics.maintenanceReserve.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                        <div style="color: #666; font-size: 0.8em; margin-top: 5px;">10% of Profit</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">⏱️</div>
+                        <div class="metric-label">Break-even Trips</div>
+                        <div class="metric-value">${riskMetrics.breakEvenTrips}</div>
+                        <div style="color: #666; font-size: 0.8em; margin-top: 5px;">Per Month</div>
+                    </div>
+                `;
+
+                document.getElementById('loadingReport').style.display = 'none';
+                document.getElementById('reportContent').style.display = 'block';
+            }, 500);
+        }
+
+        function calculateMetrics(data) {
+            const revenue = data.reduce((sum, d) => sum + (parseFloat(d['Revenue (₵)']) || 0), 0);
+            const trips = data.reduce((sum, d) => sum + (parseInt(d['Number of Trips']) || 0), 0);
+            const costs = data.reduce((sum, d) => sum + (parseFloat(d['Total Costs (₵)']) || 0), 0);
+            const profit = revenue - costs;
+            const profitMargin = revenue > 0 ? (profit / revenue) * 100 : 0;
+            const avgRevenuePerTrip = trips > 0 ? revenue / trips : 0;
+            const costPerTrip = trips > 0 ? costs / trips : 0;
+
+            return { revenue, trips, costs, profit, profitMargin, avgRevenuePerTrip, costPerTrip };
+        }
+
+        function getHealthStatus(profitMargin) {
+            if (profitMargin > 15) {
+                return { class: 'health-good', icon: '✅', message: 'EXCELLENT - Business is Healthy!' };
+            } else if (profitMargin >= 5) {
+                return { class: 'health-warning', icon: '⚠️', message: 'WARNING - Monitor Costs Closely' };
+            } else {
+                return { class: 'health-danger', icon: '🔴', message: 'CRITICAL - Approaching Debt!' };
+            }
+        }
+
+        function generateAlerts(metrics, data) {
+            let alerts = '';
+
+            if (metrics.costs > metrics.revenue) {
+                alerts += '<div class="alert-box alert-danger">🔴 DEBT WARNING: Operating costs exceed revenue this month!</div>';
+            }
+
+            if (metrics.profitMargin < 5) {
+                alerts += '<div class="alert-box alert-danger">🔴 CRITICAL: Profit margin dangerously low (<5%)</div>';
+            } else if (metrics.profitMargin < 15) {
+                alerts += '<div class="alert-box alert-warning">⚠️ WARNING: Profit margin below recommended 15%</div>';
+            }
+
+            const recentMonths = getRecentMonthsData(3);
+            if (recentMonths.length === 3) {
+                const trend = recentMonths[0].profit > recentMonths[1].profit && recentMonths[1].profit > recentMonths[2].profit;
+                if (trend) {
+                    alerts += '<div class="alert-box alert-warning">⚠️ TREND ALERT: Profit declining for 3 consecutive months</div>';
+                }
+            }
+
+            if (metrics.costPerTrip > metrics.avgRevenuePerTrip * 0.85) {
+                alerts += '<div class="alert-box alert-warning">⚠️ EFFICIENCY PROBLEM: Cost per trip approaching revenue per trip</div>';
+            }
+
+            if (!alerts) {
+                alerts = '<div class="alert-box alert-success">✅ ALL SYSTEMS HEALTHY - No warnings at this time</div>';
+            }
+
+            document.getElementById('alertsSection').innerHTML = alerts;
+        }
+
+        function getMonthlyTrends() {
+            const monthlyData = {};
+            months.forEach(m => {
+                const data = allData.filter(d => d.Month === m.name);
+                const revenue = data.reduce((sum, d) => sum + (parseFloat(d['Revenue (₵)']) || 0), 0);
+                monthlyData[m.name] = revenue;
+            });
+
+            const entries = Object.entries(monthlyData).filter(([_, v]) => v > 0);
+            if (entries.length === 0) {
+                return { bestMonth: 'N/A', bestRevenue: 0, worstMonth: 'N/A', worstRevenue: 0, trend: 'neutral' };
+            }
+
+            const sorted = entries.sort((a, b) => b[1] - a[1]);
+            const trend = entries.length > 1 && entries[entries.length - 1][1] > entries[0][1] ? 'up' : 'down';
+
+            return {
+                bestMonth: sorted[0][0],
+                bestRevenue: sorted[0][1],
+                worstMonth: sorted[sorted.length - 1][0],
+                worstRevenue: sorted[sorted.length - 1][1],
+                trend
+            };
+        }
+
+        function getRecentMonthsData(count) {
+            const result = [];
+            const currentMonthIndex = new Date().getMonth();
+            
+            for (let i = 0; i < count && i <= currentMonthIndex; i++) {
+                const monthName = months[currentMonthIndex - i]?.name;
+                if (monthName) {
+                    const data = allData.filter(d => d.Month === monthName);
+                    const metrics = calculateMetrics(data);
+                    result.push({ month: monthName, ...metrics });
+                }
+            }
+            
+            return result;
+        }
+
+        function calculateRiskMetrics(metrics) {
+            const costEfficiency = metrics.revenue > 0 ? (metrics.costs / metrics.revenue) * 100 : 0;
+            const maintenanceReserve = metrics.profit * 0.1;
+            const breakEvenTrips = metrics.avgRevenuePerTrip > 0 ? Math.ceil(metrics.costs / (metrics.avgRevenuePerTrip - metrics.costPerTrip)) : 0;
+
+            return { costEfficiency, maintenanceReserve, breakEvenTrips };
         }
 
         window.onload = checkLogin;
