@@ -201,6 +201,64 @@
             color: white;
         }
 
+        .day-btn.has-data {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .day-btn.has-data.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .day-btn.has-data::after {
+            content: '●';
+            display: block;
+            font-size: 0.5em;
+            color: #28a745;
+            margin-top: 2px;
+        }
+
+        .day-btn.has-data.active::after {
+            color: #90ee90;
+        }
+
+        .edit-mode-banner {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .export-btn {
+            padding: 12px 25px;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .export-btn:hover {
+            background: #138496;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .entry-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -231,6 +289,22 @@
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .reset-btn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
         }
 
         /* Dashboard Styles */
@@ -397,7 +471,10 @@
     <div class="container" id="mainApp">
         <div class="header">
             <h1>🚚 Truck Logistics Management System</h1>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+            <div class="header-actions">
+                <button class="export-btn" onclick="exportToCSV()">📥 Export CSV</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
         </div>
 
         <div class="nav-tabs">
@@ -426,6 +503,10 @@
                 <h3 id="monthTitle" style="margin-bottom: 20px;">February - Select Day</h3>
                 <div class="day-selector" id="daySelector"></div>
 
+                <div id="editModeBanner" class="edit-mode-banner">
+                    ✏️ Edit Mode — You are updating existing data for this day. Save to overwrite.
+                </div>
+
                 <div class="entry-form">
                     <div class="form-group">
                         <label>Number of Trips</label>
@@ -448,6 +529,12 @@
                         <input type="number" id="otherCosts" min="0" step="0.01" placeholder="0.00">
                     </div>
                     <button class="save-btn" id="saveBtn" onclick="saveData()">💾 Save Data</button>
+                    <button class="reset-btn" id="resetBtn" onclick="showResetConfirm()" style="display:none;">🗑️ Reset This Day</button>
+                    <div id="resetConfirm" style="display:none; grid-column: 1 / -1; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
+                        <p style="margin-bottom: 12px; font-weight: 600; color: #856404;">⚠️ Are you sure you want to delete all data for this day? This cannot be undone.</p>
+                        <button onclick="confirmReset()" style="padding: 10px 25px; background: #dc3545; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 10px;">Yes, Reset</button>
+                        <button onclick="cancelReset()" style="padding: 10px 25px; background: #6c757d; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    </div>
                 </div>
             </div>
 
@@ -516,13 +603,37 @@
         let currentMonth = 0;
         let currentDay = 1;
         let allData = [];
+        let isLoggedIn = false;
+        let memoryStore = {};
+
+        // --- Robust Storage: tries window.storage, falls back to in-memory ---
+        const Storage = {
+            async set(key, value) {
+                memoryStore[key] = value;
+                try { if (window.storage) await window.storage.set(key, value); } catch(e) {}
+                try { localStorage.setItem(key, value); } catch(e) {}
+            },
+            async get(key) {
+                // Priority: memoryStore > window.storage > localStorage
+                if (memoryStore[key] !== undefined) return memoryStore[key];
+                try { if (window.storage) { const r = await window.storage.get(key); if (r) { memoryStore[key] = r.value; return r.value; } } } catch(e) {}
+                try { const v = localStorage.getItem(key); if (v) { memoryStore[key] = v; return v; } } catch(e) {}
+                return null;
+            },
+            async list(prefix) {
+                const keys = new Set(Object.keys(memoryStore).filter(k => k.startsWith(prefix)));
+                try { if (window.storage) { const r = await window.storage.list(prefix); if (r && r.keys) r.keys.forEach(k => keys.add(k)); } } catch(e) {}
+                try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(prefix)) keys.add(k); } } catch(e) {}
+                return [...keys];
+            }
+        };
 
         function login() {
             const password = document.getElementById('passwordInput').value;
             if (password === ADMIN_PASSWORD) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
-                sessionStorage.setItem('isLoggedIn', 'true');
+                isLoggedIn = true;
                 init();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
@@ -533,21 +644,22 @@
         }
 
         function logout() {
-            sessionStorage.removeItem('isLoggedIn');
+            isLoggedIn = false;
             location.reload();
         }
 
         function checkLogin() {
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                init();
-            }
+            // No persistent login check — user must log in each session
         }
 
-        function init() {
+        async function init() {
             createMonthTabs();
+            // Load all saved data from window.storage into memoryStore
+            await loadAllFromStorage();
             createDaySelector();
+            rebuildAllDataFromMemory();
+            loadDayData(1);
+            // Also try to sync from Google Sheet in background
             loadDataFromSheet();
         }
 
@@ -575,16 +687,84 @@
         function createDaySelector() {
             const container = document.getElementById('daySelector');
             const days = months[currentMonth].days;
-            container.innerHTML = Array.from({length: days}, (_, i) => 
-                `<div class="day-btn ${i === 0 ? 'active' : ''}" onclick="selectDay(${i + 1})">${i + 1}</div>`
-            ).join('');
+            container.innerHTML = Array.from({length: days}, (_, i) => {
+                const day = i + 1;
+                const key = getStorageKey(currentTruck, currentMonth, day);
+                const hasData = memoryStore[key] !== undefined;
+                return `<div class="day-btn ${i === 0 ? 'active' : ''} ${hasData ? 'has-data' : ''}" onclick="selectDay(${day})">${day}</div>`;
+            }).join('');
+        }
+
+        function getStorageKey(truck, monthIndex, day) {
+            return `truck_${truck}_${monthIndex}_${day}`;
+        }
+
+        async function loadAllFromStorage() {
+            try {
+                const keys = await Storage.list('truck_');
+                for (const key of keys) {
+                    try {
+                        const val = await Storage.get(key);
+                        if (val) memoryStore[key] = typeof val === 'string' ? JSON.parse(val) : val;
+                    } catch(e) {}
+                }
+            } catch(e) {
+                console.log('Storage load error:', e);
+            }
+        }
+
+        function loadDayData(day) {
+            const key = getStorageKey(currentTruck, currentMonth, day);
+            let saved = memoryStore[key];
+            if (saved) {
+                if (typeof saved === 'string') { try { saved = JSON.parse(saved); } catch(e) { saved = null; } }
+                if (saved) {
+                    document.getElementById('trips').value = saved.trips || '';
+                    document.getElementById('revenue').value = saved.revenue || '';
+                    document.getElementById('fuelCost').value = saved.fuelCost || '';
+                    document.getElementById('maintenance').value = saved.maintenance || '';
+                    document.getElementById('otherCosts').value = saved.otherCosts || '';
+                    document.getElementById('editModeBanner').style.display = 'flex';
+                    document.getElementById('resetBtn').style.display = 'block';
+                    return;
+                }
+            }
+            clearForm();
+        }
+
+        function showResetConfirm() {
+            document.getElementById('resetConfirm').style.display = 'block';
+            document.getElementById('resetBtn').style.display = 'none';
+        }
+
+        function cancelReset() {
+            document.getElementById('resetConfirm').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'block';
+        }
+
+        async function confirmReset() {
+            const key = getStorageKey(currentTruck, currentMonth, currentDay);
+            const dayLabel = `${months[currentMonth].name} ${currentDay}`;
+
+            delete memoryStore[key];
+            try { if (window.storage) await window.storage.delete(key); } catch(e) {}
+            try { localStorage.removeItem(key); } catch(e) {}
+
+            rebuildAllDataFromMemory();
+            createDaySelector();
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                if (parseInt(btn.textContent) === currentDay) btn.classList.add('active');
+            });
+            clearForm();
+            showAlert(`🗑️ Data for ${dayLabel} has been reset.`, 'warning');
         }
 
         function switchTruck(truck) {
             currentTruck = truck;
             document.querySelectorAll('.truck-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            clearForm();
+            createDaySelector();
+            loadDayData(currentDay);
         }
 
         function switchMonth(index) {
@@ -594,14 +774,14 @@
             document.querySelectorAll('.month-tab')[index].classList.add('active');
             document.getElementById('monthTitle').textContent = `${months[index].name} - Select Day`;
             createDaySelector();
-            clearForm();
+            loadDayData(1);
         }
 
         function selectDay(day) {
             currentDay = day;
             document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            clearForm();
+            loadDayData(day);
         }
 
         function clearForm() {
@@ -610,6 +790,9 @@
             document.getElementById('fuelCost').value = '';
             document.getElementById('maintenance').value = '';
             document.getElementById('otherCosts').value = '';
+            document.getElementById('editModeBanner').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+            document.getElementById('resetConfirm').style.display = 'none';
         }
 
         function showAlert(message, type) {
@@ -638,13 +821,13 @@
                 month: months[currentMonth].name,
                 day: currentDay,
                 date: `${months[currentMonth].name} ${currentDay}, 2025`,
-                trips: trips,
-                revenue: revenue,
-                fuelCost: fuelCost,
-                maintenance: maintenance,
-                otherCosts: otherCosts,
-                totalCosts: totalCosts,
-                profit: profit,
+                trips,
+                revenue,
+                fuelCost,
+                maintenance,
+                otherCosts,
+                totalCosts,
+                profit,
                 timestamp: new Date().toLocaleString()
             };
 
@@ -652,6 +835,20 @@
             saveBtn.disabled = true;
             saveBtn.textContent = '💾 Saving...';
 
+            // Save to all available storage mechanisms
+            const key = getStorageKey(currentTruck, currentMonth, currentDay);
+            memoryStore[key] = data;
+            await Storage.set(key, JSON.stringify(data));
+
+            rebuildAllDataFromMemory();
+
+            // Refresh day buttons
+            createDaySelector();
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                if (parseInt(btn.textContent) === currentDay) btn.classList.add('active');
+            });
+
+            // Send to Google Sheets
             try {
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
@@ -659,28 +856,93 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-
-                showAlert('✅ Data saved successfully!', 'success');
-                clearForm();
-                await loadDataFromSheet();
+                showAlert('✅ Data saved to website & spreadsheet!', 'success');
             } catch (error) {
-                showAlert('✅ Data sent successfully!', 'success');
-                clearForm();
+                showAlert('✅ Data saved! (Spreadsheet sync may be pending)', 'success');
             } finally {
                 saveBtn.disabled = false;
                 saveBtn.textContent = '💾 Save Data';
+                document.getElementById('editModeBanner').style.display = 'flex';
             }
+        }
+
+        function rebuildAllDataFromMemory() {
+            allData = Object.values(memoryStore).map(entry => {
+                if (typeof entry === 'string') { try { entry = JSON.parse(entry); } catch(e) { return null; } }
+                if (!entry) return null;
+                return {
+                    'Truck': entry.truck,
+                    'Month': entry.month,
+                    'Day': entry.day,
+                    'Date': entry.date,
+                    'Number of Trips': entry.trips,
+                    'Revenue (₵)': entry.revenue,
+                    'Fuel Cost (₵)': entry.fuelCost,
+                    'Maintenance (₵)': entry.maintenance,
+                    'Other Costs (₵)': entry.otherCosts,
+                    'Total Costs (₵)': entry.totalCosts,
+                    'Profit/Loss (₵)': entry.profit,
+                    'Timestamp': entry.timestamp
+                };
+            }).filter(Boolean);
+        }
+
+        function exportToCSV() {
+            if (allData.length === 0) {
+                alert('No data to export yet.');
+                return;
+            }
+            const headers = ['Truck','Month','Day','Date','Number of Trips','Revenue (₵)','Fuel Cost (₵)','Maintenance (₵)','Other Costs (₵)','Total Costs (₵)','Profit/Loss (₵)','Timestamp'];
+            const rows = allData.map(d => headers.map(h => {
+                const val = d[h] !== undefined ? d[h] : '';
+                // Wrap in quotes if contains comma
+                return String(val).includes(',') ? `"${val}"` : val;
+            }).join(','));
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `truck_logistics_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         async function loadDataFromSheet() {
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData');
                 const result = await response.json();
-                if (result.status === 'success') {
-                    allData = result.data || [];
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    for (const remoteEntry of result.data) {
+                        const truck = remoteEntry['Truck'];
+                        const monthName = remoteEntry['Month'];
+                        const day = remoteEntry['Day'];
+                        const monthIndex = months.findIndex(m => m.name === monthName);
+                        if (monthIndex >= 0 && truck && day) {
+                            const key = getStorageKey(truck, monthIndex, day);
+                            if (!memoryStore[key]) {
+                                const entry = {
+                                    truck, month: monthName, day,
+                                    date: remoteEntry['Date'] || `${monthName} ${day}, 2025`,
+                                    trips: remoteEntry['Number of Trips'] || 0,
+                                    revenue: remoteEntry['Revenue (₵)'] || 0,
+                                    fuelCost: remoteEntry['Fuel Cost (₵)'] || 0,
+                                    maintenance: remoteEntry['Maintenance (₵)'] || 0,
+                                    otherCosts: remoteEntry['Other Costs (₵)'] || 0,
+                                    totalCosts: remoteEntry['Total Costs (₵)'] || 0,
+                                    profit: remoteEntry['Profit/Loss (₵)'] || 0,
+                                    timestamp: remoteEntry['Timestamp'] || ''
+                                };
+                                memoryStore[key] = entry;
+                                await Storage.set(key, JSON.stringify(entry));
+                            }
+                        }
+                    }
+                    rebuildAllDataFromMemory();
+                    createDaySelector();
                 }
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.log('Sheet sync skipped:', error);
             }
         }
 
